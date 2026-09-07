@@ -123,22 +123,24 @@ Datasets loaded in the notebook:
 
 ---
 
-## 📈 Power BI Dashboard
-📄 File: `E-Commerce.pbix`
+## 🖼 Dashboard Preview
 
-- **Page 1 — Executive Summary**
-- **Page 2 — Customer & RFM Analysis**
-- **Page 3 — Product & Revenue Performance**
-- **Page 4 — Delivery, Seller & Satisfaction**
+### Page 1 — Executive Summary
+![Page 1](p-1.png)
 
-*(Detailed visuals per page to be added once confirmed against the dashboard itself — the `.pbix` file could not be read directly to extract this.)*
+### Page 2 — Customer & RFM Analysis
+![Page 2](P-2.png)
 
+### Page 3 — Product & Revenue Performance
+![Page 3](P-3.png)
+
+### Page 4 — Delivery, Seller & Satisfaction
+![Page 4](P-4.png)
 ---
 
 ## 💡 Key Insights
-*(From the notebook's "Insights & Recommendations" section)*
 
-- Orders grew consistently from 2016 to a peak in November 2017 (Black Friday effect); 93,358 unique customers acquired over 2 years
+- Orders grew consistently from 2016 to a peak in November 2017; 93,358 unique customers acquired over 2 years
 - 97% of customers purchased only once; only 995 of 93,357 customers (1%) are Champions; average customer lifespan is near 0 days
 - 14,585 customers are in a "Cannot Lose Them" segment (high spend, gone cold); Premium customers (1,149) contribute 11.8% of revenue
 - Credit card is the dominant payment method; average installments is 2.9; more installments correlates with higher spend
