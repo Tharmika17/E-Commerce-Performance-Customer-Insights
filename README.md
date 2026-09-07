@@ -1,97 +1,154 @@
-🛍️ E-Commerce Sales & Customer Analytics (Olist)
+# 🛍️ E-Commerce Sales & Customer Analytics (Olist)
 
-📊 Project Overview
-This project analyses e-commerce marketplace data to explore revenue trends, customer behaviour, delivery performance, seller performance, and geographic patterns.
+## 📊 Project Overview
+This project analyses e-commerce order data using Python (data cleaning, feature 
+engineering, exploratory analysis, RFM, CLV, cohort, seller and geolocation analysis), 
+MySQL (KPI queries with CTEs and window functions), and Power BI (4-page dashboard).
 
-Using Python for data cleaning, feature engineering and exploratory analysis, MySQL for structured KPI analysis (CTEs, window functions, RFM/CLV computation), and Power BI for interactive visualisation, the project transforms raw multi-table order data into meaningful business insights.
+📄 Files: `E-Commerce.ipynb`, `E-Commerce.sql`, `E-Commerce.pbix`
 
-The analysis enables exploration of revenue drivers, customer segments (RFM & CLV), cohort growth, seller quality, and regional performance — supporting data-driven decisions for a growing online marketplace.
+---
 
-🎯 Business Problem
-Marketplace businesses generate large volumes of transactional data spread across orders, payments, products, sellers, reviews and customers — but this data is fragmented and hard to interpret on its own. Businesses need to understand who their most valuable customers are, which sellers and categories drive revenue, how delivery performance affects satisfaction, and where geographic or operational bottlenecks exist.
+## 🗂 Dataset
+Datasets loaded in the notebook:
+- olist_customers_dataset.csv
+- olist_orders_dataset.csv
+- olist_order_items_dataset.csv
+- olist_order_payments_dataset.csv
+- olist_order_reviews_dataset.csv
+- olist_products_dataset.csv
+- olist_sellers_dataset.csv
+- olist_geolocation_dataset.csv
+- category translation file (English product category names)
 
-This project addresses that challenge by building an end-to-end analytics pipeline — from raw multi-table data to cleaned datasets, a relational database, and a Power BI dashboard — that surfaces revenue, retention, delivery, and seller insights in one place.
+---
 
-🗂 Dataset
-The dataset is the Olist Brazilian E-Commerce Public Dataset, containing orders, customers, products, sellers, payments, reviews and geolocation data across ~93,000 unique customers and 2 years of transaction history.
+## 🛠 Tools & Technologies
+- **Python** — pandas, numpy, matplotlib, seaborn, sqlalchemy
+- **MySQL** — accessed from Python via `mysql+mysqlconnector`
+- **Power BI** — dashboard file `E-Commerce.pbix`
 
-📄 Dataset Files: olist_customers_dataset.csv, olist_orders_dataset.csv, olist_order_items_dataset.csv, olist_order_payments_dataset.csv, olist_order_reviews_dataset.csv, olist_products_dataset.csv, olist_sellers_dataset.csv, olist_geolocation_dataset.csv, product_category_name_translation.csv
+---
 
-Key Features
-Customer: unique customer ID, city, state
-Order: purchase/approval/delivery timestamps, order status, estimated vs actual delivery
-Order Items: price, freight value, product, seller
-Payments: payment type, installments, payment value
-Reviews: review score, comment, response timing
-Products: category (English-translated), dimensions, weight
-Engineered Features: delivery days (actual/estimated/delay), total item value, freight %, RFM scores & segments, CLV & spend tier, cohort month
+## 🔎 Python Analysis
+📄 Notebook: `E-Commerce.ipynb`
 
-🛠 Tools & Technologies
-Python — Data cleaning, feature engineering, EDA, RFM/CLV analysis
-MySQL — Relational storage, KPI queries using CTEs and window functions
-Power BI — Interactive dashboard for revenue, customer, seller and geo insights
-Jupyter Notebook — Code development and analysis environment
-GitHub — Project documentation and portfolio showcase
+**Data Cleaning**
+- Converted order date columns to datetime
+- Filled missing product category names with "unknown"; filled missing product dimensions with median values
+- Filled missing review comment fields with "no comment"
+- Converted `shipping_limit_date` to datetime; created `total_item_value` (price + freight_value)
+- Standardised customer city (title case) and state (uppercase)
+- Exported cleaned datasets to CSV, then loaded into MySQL
 
-🔎 Python Analysis
-Data preprocessing, feature engineering and exploratory analysis were performed in Python before loading cleaned data into MySQL.
+**Feature Engineering**
+- Extracted purchase year, month, day, day-of-week, hour from purchase timestamp
+- Calculated actual delivery days
 
-📄 Notebook: E-Commerce.ipynb
+**Exploratory Data Analysis (12 analyses)**
+1. Orders over time
+2. Order status breakdown
+3. Revenue over time
+4. Top product categories
+5. Payment type analysis
+6. Review score distribution
+7. Orders by day of week & hour
+8. Top 10 customer states
+9. Delivery performance analysis
+10. Average order value (AOV) analysis
+11. Freight vs price analysis
+12. Installments analysis
 
-Analysis Included
-Data cleaning and preprocessing (date parsing, missing value handling, text standardisation)
-Feature engineering: delivery day calculations, total item value, freight percentage, date part extraction
-Exploratory data analysis with visualisations (orders over time, revenue trends, category performance, payment types, review scores, order timing, delivery performance, AOV, freight vs price, instalments)
-RFM scoring and customer segmentation
-Cohort analysis — monthly new-customer acquisition and cumulative growth
-Customer Lifetime Value (CLV) segmentation
-Seller performance analysis
-Geolocation / state-level analysis
+**RFM Analysis**
+- Pulled Recency, Frequency, Monetary values from MySQL
+- Scored each (1–5) using `pd.qcut`
+- Segmented customers by RFM score (segments referenced in the notebook include Champions, Loyal Customers, New Customers, Potential Loyalists, At Risk)
+- Exported results to MySQL as `rfm_segments`
 
-🗄 SQL Analysis
-KPI queries covering revenue, customer, order/funnel, delivery, seller, review and advanced (CTE + window function) analysis were written in MySQL.
+**Cohort Analysis**
+- Queried monthly new-customer counts (order-based cohort)
+- Calculated cumulative customer growth over time
 
-📄 SQL File: E-Commerce.sql
+**Customer Lifetime Value (CLV)**
+- Pulled total orders, total spend, and avg order value per customer from MySQL
+- Segmented by total spend: Low (0–100), Medium (100–300), High (300–600), Very High (600–1000), Premium (1000+)
+- Exported results to MySQL as `clv_segments`
 
-Query Sections
-Revenue Analysis — total, monthly trend, by payment type, by category
-Customer Analysis — unique customers, by state, repeat vs one-time
-Order & Funnel Analysis — status breakdown, day/hour patterns, purchase-to-delivery time
-Delivery & Seller Performance — top sellers by revenue, freight cost by state
-RFM Pre-Calculation — recency, frequency, monetary base query
-Review & Satisfaction Analysis — score distribution, by category, vs delivery performance
-Advanced SQL — cumulative revenue (window functions), top categories per state, top customers per state (CTEs + RANK/ROW_NUMBER)
+**Seller Performance**
+- Queried seller-level revenue, order count, avg price, avg review score, and avg delivery days from MySQL
+- Visualised top 10 sellers by revenue
 
-📈 Dashboard Features
-📄 Power BI File: E-Commerce.pbix
+**Geolocation Analysis**
+- Queried state-level orders, customers, revenue, avg order value, and delivery metrics from MySQL
+- Visualised revenue and customer count by state
 
-Visual Analysis
-Revenue trend over time
-Revenue by category, payment type and state
-RFM segment distribution and customer value
-CLV segment breakdown and revenue contribution
-Cohort growth — cumulative customers over time
-Seller performance — top sellers by revenue and review score
-Delivery performance — actual vs estimated delivery, delay analysis
-Geographic breakdown — revenue, customers and freight by state
+---
 
-💡 Key Insights
-- Orders grew consistently from 2016, peaking in November 2017 (Black Friday effect), with 93,358 unique customers acquired over 2 years
-- Retention is the biggest challenge — 97% of customers purchased only once, and only 995 of 93,357 customers (1%) qualify as Champions
-- 14,585 customers sit in a "Cannot Lose Them" segment — high past spend but gone cold; Premium customers (1,149) contribute 11.8% of revenue
-- Credit card is the dominant payment method, with an average of 2.9 installments — higher installment counts correlate with higher spend
-- Delivery performance is strong — average actual delivery is 12 days vs. 23 days estimated, with most orders arriving early
-- Revenue is heavily concentrated in top product categories, with a long tail of low performers
-- The top seller generated R$225,586 in revenue; average seller review score is 4.15/5, though some sellers show delivery outliers as high as 190 days
-- São Paulo accounts for the majority of orders and revenue; remote states face higher freight costs and longer delivery times
-- Average freight cost is R$20 (~15% of order value), disproportionately higher in remote states
+## 🗄 SQL Analysis
+📄 SQL File: `E-Commerce.sql`
 
-🖼 Dashboard Preview
-*(Add Power BI screenshots here, e.g. Overview, Customer Segmentation, Seller & Delivery Performance, Geographic Analysis)*
+**Section 1 — Revenue Analysis**
+- Total overall revenue, total orders, avg order value
+- Monthly revenue trend
+- Revenue by payment type
+- Revenue by product category (top 10)
 
-📚 Data Source & License
-The dataset used in this project is the Olist Brazilian E-Commerce Public Dataset, available on Kaggle.
+**Section 2 — Customer Analysis**
+- Total unique customers, customer IDs, states
+- Customers by state (top 10)
+- Repeat vs one-time customers
 
+**Section 3 — Order & Funnel Analysis**
+- Order status breakdown (with percentage)
+- Orders by day of week
+- Orders by hour of day
+- Average time from purchase to delivery (actual vs estimated, delay, late order count)
 
-This project is created for educational and portfolio purposes only.
+**Section 4 — Delivery & Seller Performance**
+- Top 10 sellers by revenue
+- Freight cost analysis by state (avg freight, avg price, freight % of price)
 
+**Section 5 — RFM Pre-Calculation**
+- Base query: recency, frequency, monetary per customer
+
+**Section 6 — Review & Satisfaction Analysis**
+- Overall review score distribution
+- Average review score by product category (top 10)
+- Review score vs delivery performance (avg delivery days, avg delay)
+
+**Section 7 — Advanced SQL (CTEs & Window Functions)**
+- Cumulative revenue growth by month (window function)
+- Top 3 product categories per state (CTE + `ROW_NUMBER()`)
+- Top 5 customers per state by spend (CTE + `RANK()`)
+
+---
+
+## 📈 Power BI Dashboard
+📄 File: `E-Commerce.pbix`
+
+- **Page 1 — Executive Summary**
+- **Page 2 — Customer & RFM Analysis**
+- **Page 3 — Product & Revenue Performance**
+- **Page 4 — Delivery, Seller & Satisfaction**
+
+*(Detailed visuals per page to be added once confirmed against the dashboard itself — the `.pbix` file could not be read directly to extract this.)*
+
+---
+
+## 💡 Key Insights
+*(From the notebook's "Insights & Recommendations" section)*
+
+- Orders grew consistently from 2016 to a peak in November 2017 (Black Friday effect); 93,358 unique customers acquired over 2 years
+- 97% of customers purchased only once; only 995 of 93,357 customers (1%) are Champions; average customer lifespan is near 0 days
+- 14,585 customers are in a "Cannot Lose Them" segment (high spend, gone cold); Premium customers (1,149) contribute 11.8% of revenue
+- Credit card is the dominant payment method; average installments is 2.9; more installments correlates with higher spend
+- Average actual delivery is 12 days vs. 23 days estimated; most orders arrive early
+- Top categories dominate revenue heavily; long tail of low-performing categories
+- Top seller generated R$225,586 in revenue; average seller review score is 4.15/5; some sellers show delivery outliers of up to 190 days
+- São Paulo accounts for the majority of orders and revenue; remote states have higher freight costs and longer delivery times
+- Average freight is R$20, roughly 15% of order value; disproportionately higher in some states
+
+---
+
+## 📚 Data Source
+Data Soursce was downloaded from Kaggle. This project is only for portfolio and academic work only.
